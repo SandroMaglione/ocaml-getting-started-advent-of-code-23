@@ -64,15 +64,15 @@ let let_to_int ltt =
   | Nine -> 9
 ;;
 
-let sub_option line i l =
-  try Some (String.sub line i (i + l)) with
+let sub_option line i len =
+  try Some (String.sub line i len) with
   | Invalid_argument _ -> None
 ;;
 
 let parse_n expect res line i =
   let l = String.length expect in
   match sub_option line i l with
-  | Some str -> if str == expect then Some (res, i + l) else None
+  | Some str -> if String.equal str expect then Some (res, i + l) else None
   | _ -> None
 ;;
 
@@ -101,12 +101,12 @@ let parse_all line i =
 ;;
 
 let rec from_char i line =
-  if String.length line >= i
+  if i >= String.length line
   then []
   else (
     let src = List.find_opt Option.is_some (parse_all line i) in
     match Option.join src with
-    | Some (ltt, ni) -> List.cons ltt (from_char ni line)
+    | Some (ltt, ni) -> ltt :: from_char ni line
     | None -> from_char (i + 1) line)
 ;;
 
