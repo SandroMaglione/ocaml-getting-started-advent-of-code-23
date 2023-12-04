@@ -1,2 +1,3 @@
-aoc1.txt
-example
+_build
+input/**/*.txt
+!/input/**/test*.txt
