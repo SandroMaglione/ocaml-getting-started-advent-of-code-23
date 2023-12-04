@@ -72,7 +72,7 @@ let sub_option line i len =
 let parse_n expect res line i =
   let l = String.length expect in
   match sub_option line i l with
-  | Some str -> if String.equal str expect then Some (res, i + l) else None
+  | Some str -> if String.equal str expect then Some (res, i + l - 1) else None
   | _ -> None
 ;;
 
@@ -100,28 +100,38 @@ let parse_all line i =
   |> List.map (fun prs -> prs line i)
 ;;
 
-let rec from_char i line =
+let rec from_char i dig line =
   if i >= String.length line
-  then []
+  then dig
   else (
     let src = List.find_opt Option.is_some (parse_all line i) in
     match Option.join src with
-    | Some (ltt, ni) -> ltt :: from_char ni line
-    | None -> from_char (i + 1) line)
-;;
-
-let rec print_list = function
-  | [] -> ""
-  | ltt :: l -> string_of_int (let_to_int ltt) ^ " " ^ print_list l
+    | Some (ltt, ni) ->
+      from_char
+        ni
+        (match dig with
+         | Empty -> Full (let_to_int ltt, let_to_int ltt)
+         | Full (it, _) -> Full (it, let_to_int ltt))
+        line
+    | None ->
+      from_char
+        (i + 1)
+        (match dig, int_of_string_opt (Char.escaped line.[i]) with
+         | Empty, None -> Empty
+         | Empty, Some n -> Full (n, n)
+         | Full (it, lt), None -> Full (it, lt)
+         | Full (it, _), Some n -> Full (it, n))
+        line)
 ;;
 
 let read_and_print2 file_to_read =
   file_to_read
   |> In_channel.open_text
   |> In_channel.input_lines
-  |> List.map (from_char 0)
-  |> List.map print_list
-  |> List.fold_left String.cat ""
+  |> List.map (from_char 0 Empty)
+  |> List.map dig_sum
+  |> List.fold_left (fun sum n -> sum + n) 0
+  |> string_of_int
 ;;
 
-let main2 = read_and_print2 input_test2
+let main2 = read_and_print2 input_file
