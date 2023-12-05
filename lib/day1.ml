@@ -7,24 +7,25 @@ type digits =
   | Empty
   | Full of int * int
 
-let new_digits dig str =
-  match dig, int_of_string_opt str with
+let collect_digits dig str =
+  let int_option = int_of_string_opt str in
+  match dig, int_option with
   | Empty, None -> Empty
   | Empty, Some n -> Full (n, n)
   | Full (f, l), None -> Full (f, l)
   | Full (f, _), Some n -> Full (f, n)
 ;;
 
-let dig_sum = function
+let digits_sum = function
   | Empty -> 0
-  | Full (f, l) -> (f * 10) + l
+  | Full (firstNum, lastNum) -> (firstNum * 10) + lastNum
 ;;
 
-let handle_line line =
-  line
-  |> String.fold_left (fun dig chr -> chr |> Char.escaped |> new_digits dig) Empty
-  |> dig_sum
+let read_chars =
+  String.fold_left (fun dig chr -> chr |> Char.escaped |> collect_digits dig) Empty
 ;;
+
+let handle_line line = line |> read_chars |> digits_sum
 
 let read_and_print1 file_to_read =
   file_to_read
@@ -127,7 +128,7 @@ let read_and_print2 file_to_read =
   |> In_channel.open_text
   |> In_channel.input_lines
   |> List.map (from_char 0 Empty)
-  |> List.map dig_sum
+  |> List.map digits_sum
   |> List.fold_left (fun sum n -> sum + n) 0
   |> string_of_int
 ;;
