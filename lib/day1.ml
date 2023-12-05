@@ -15,8 +15,7 @@ let new_digits dig str =
   | Full (f, _), Some n -> Full (f, n)
 ;;
 
-let dig_sum dig =
-  match dig with
+let dig_sum = function
   | Empty -> 0
   | Full (f, l) -> (f * 10) + l
 ;;
@@ -51,8 +50,7 @@ type letters =
   | Eight
   | Nine
 
-let let_to_int ltt =
-  match ltt with
+let let_to_int = function
   | One -> 1
   | Two -> 2
   | Three -> 3
