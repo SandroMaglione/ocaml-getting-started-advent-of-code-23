@@ -17,9 +17,19 @@ This project is part of my weekly newsletter at [**sandromaglione.com**](https:/
     <img alt="sandromaglione.com Newsletter weekly project" src="https://www.sandromaglione.com/static/images/newsletter_banner.webp" target="_blank" /> 
 </a>
 
-## Getting started
+## Project structure
+The core of the project is implemented inside [`lib`](./lib). This folder contains the solutions to the puzzles of **Advent of code 2023**.
+
+You can build and execute the code by running the following commands:
+
 ```bash
 dune fmt
 dune build
 dune exec aoc
 ```
+
+**Read all the details in the full article** 👇
+
+<a href="https://www.sandromaglione.com/articles/getting-started-with-ocaml-and-functional-programming?ref=Github&utm_medium=newsletter_project&utm_term=ocaml">
+    <img alt="Read the full article on my website" src="https://www.sandromaglione.com/api/image?title=Getting%20started%20with%20OCaml%20and%20Functional%20Programming&publishedAt=2023-12-06" target="_blank" /> 
+</a>
